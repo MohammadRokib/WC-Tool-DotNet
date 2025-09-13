@@ -1,13 +1,16 @@
-﻿namespace WC_TOOL
+﻿using WC_TOOL.IServices;
+using WC_TOOL.IServices.Services;
+
+namespace WC_TOOL
 {
     internal class Program
     {
         static void Main(string[] args)
         {
             PathFinder t = new PathFinder();
-            String directory = t.Path();
+            ICCWC wc = new CCWC(t.Path());
 
-            Console.WriteLine(directory);
+            wc.ProcessFile();
         }
     }
 }
