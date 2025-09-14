@@ -7,10 +7,12 @@ namespace WC_TOOL
     {
         static void Main(string[] args)
         {
-            PathFinder t = new PathFinder();
-            ICCWC wc = new CCWC(t.Path());
-
-            wc.ProcessFile();
+            String input = String.Empty;
+            while (input is null || input == String.Empty)
+            {
+                input = Console.ReadLine()!;
+                ICCWC wc = new CCWC(input);
+            }
         }
     }
 }
