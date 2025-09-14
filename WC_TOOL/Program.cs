@@ -8,11 +8,13 @@ namespace WC_TOOL
         static void Main(string[] args)
         {
             String input = String.Empty;
-            while (input is null || input == String.Empty)
+            while (String.IsNullOrWhiteSpace(input))
             {
                 input = Console.ReadLine()!;
-                ICCWC wc = new CCWC(input);
             }
+            
+            ICCWC wc = new CCWC(input);
+            wc.ProcessFile();
         }
     }
 }

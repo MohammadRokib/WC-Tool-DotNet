@@ -18,12 +18,13 @@ namespace WC_TOOL.IServices.Services
         {
             ParseInput(input);
             GetPath();
-            GetContent();
-            ProcessFile();
         }
 
         public void ProcessFile()
         {
+            if (!LoadFile())
+                return;
+
             switch (Option)
             {
                 case "-c":
@@ -82,17 +83,17 @@ namespace WC_TOOL.IServices.Services
             }
         }
 
-        private void GetContent()
+        private bool LoadFile()
         {
-            if (File.Exists(DIRECTORY))
+            if (!File.Exists(DIRECTORY))
             {
-                FileContent = File.ReadAllText(DIRECTORY);
-                Console.WriteLine("File read complete");
+                Console.WriteLine("File not found");
+                return false;
             }
-            else
-            {
-                Console.WriteLine("File doesn't exist please create the file first");
-            }
+
+            FileContent = File.ReadAllText(DIRECTORY);
+            Console.WriteLine("File Read Complete");
+            return true;
         }
 
         private void ParseInput(String input)
