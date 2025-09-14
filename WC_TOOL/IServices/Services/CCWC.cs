@@ -25,10 +25,12 @@ namespace WC_TOOL.IServices.Services
             if (!LoadFile())
                 return;
 
+            long result = 0;
+
             switch (Option)
             {
                 case "-c":
-                    CountBytes();
+                    result = CountBytes();
                     break;
                 case "-l":
                     CountLines();
@@ -43,11 +45,16 @@ namespace WC_TOOL.IServices.Services
                     DefaultCount();
                     break;
             }
+
+            Console.WriteLine($"{result} {FileName}");
         }
 
-        private void CountBytes()
+        private long CountBytes()
         {
             Console.WriteLine("Counting bytes");
+            //byte[] bytes = Encoding.UTF8.GetBytes(FileContent);
+            //return bytes.Length;
+            return new FileInfo(DIRECTORY).Length;
         }
 
         private void CountLines()
@@ -99,7 +106,7 @@ namespace WC_TOOL.IServices.Services
         private void ParseInput(String input)
         {
             String[] inputParts = input.Split(' ');
-            if (inputParts[0].ToUpper() == ("ccwc").ToUpper())
+            if (inputParts[0].Equals("ccwc", StringComparison.OrdinalIgnoreCase))
             {
                 Group = inputParts[0];
                 Option = inputParts[1];
@@ -107,7 +114,7 @@ namespace WC_TOOL.IServices.Services
             }
             else
             {
-                Console.WriteLine("other option");
+                Console.WriteLine("Invalid command format. Use: ccwc [option] [filename]");
             }
         }
     }
