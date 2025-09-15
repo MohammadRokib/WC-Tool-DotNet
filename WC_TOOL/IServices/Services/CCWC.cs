@@ -33,7 +33,7 @@ namespace WC_TOOL.IServices.Services
                     result = CountBytes();
                     break;
                 case "-l":
-                    CountLines();
+                    result = CountLines();
                     break;
                 case "-m":
                     CountChars();
@@ -51,15 +51,21 @@ namespace WC_TOOL.IServices.Services
 
         private long CountBytes()
         {
-            Console.WriteLine("Counting bytes");
-            //byte[] bytes = Encoding.UTF8.GetBytes(FileContent);
-            //return bytes.Length;
             return new FileInfo(DIRECTORY).Length;
         }
 
-        private void CountLines()
+        private long CountLines()
         {
-            Console.WriteLine("Counting Lines");
+            long lineCount = 0;
+            using (StreamReader sr = new StreamReader(DIRECTORY))
+            {
+                String line;
+                while ((line = sr.ReadLine()) != null)
+                {
+                    lineCount++;
+                }
+            }
+            return lineCount;
         }
 
         private void CountWords()
