@@ -36,7 +36,7 @@ namespace WC_TOOL.IServices.Services
                     result = CountLines();
                     break;
                 case "-m":
-                    CountChars();
+                    result = CountChars();
                     break;
                 case "-w":
                     result = CountWords();
@@ -49,12 +49,12 @@ namespace WC_TOOL.IServices.Services
             Console.WriteLine($"{result} {FileName}");
         }
 
-        private long CountBytes()
+        public long CountBytes()
         {
             return new FileInfo(DIRECTORY).Length;
         }
 
-        private long CountLines()
+        public long CountLines()
         {
             long lineCount = 0;
             using (StreamReader sr = new StreamReader(DIRECTORY))
@@ -68,10 +68,8 @@ namespace WC_TOOL.IServices.Services
             return lineCount;
         }
 
-        private long CountWords()
+        public long CountWords()
         {
-            Console.WriteLine("Counting Words");
-            Console.WriteLine();
             long wordCount = 0;
             bool inWord = false;
 
@@ -101,9 +99,20 @@ namespace WC_TOOL.IServices.Services
             return wordCount;
         }
 
-        private void CountChars()
+        public long CountChars()
         {
             Console.WriteLine("Counting Lines");
+            long charCount = 0;
+
+            using (StreamReader sr = new StreamReader(DIRECTORY))
+            {
+                int charCode;
+                while ((charCode = sr.Read()) != -1)
+                {
+                    charCount++;
+                }
+            }
+            return charCount;
         }
 
         private void DefaultCount()
@@ -115,8 +124,8 @@ namespace WC_TOOL.IServices.Services
         {
             try
             {
-                DIRECTORY = new DirectoryInfo(Directory.GetCurrentDirectory()).Parent.Parent.Parent.ToString();
-                DIRECTORY = Path.Combine(DIRECTORY, FileName);
+                DIRECTORY = new DirectoryInfo(Directory.GetCurrentDirectory()).Parent.Parent.Parent.Parent.ToString();
+                DIRECTORY = Path.Combine(DIRECTORY, "WC_TOOL", FileName);
             }
             catch (Exception e)
             {
