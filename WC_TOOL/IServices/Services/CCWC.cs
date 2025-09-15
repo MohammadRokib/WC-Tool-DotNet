@@ -39,7 +39,7 @@ namespace WC_TOOL.IServices.Services
                     CountChars();
                     break;
                 case "-w":
-                    CountWords();
+                    result = CountWords();
                     break;
                 default:
                     DefaultCount();
@@ -68,9 +68,37 @@ namespace WC_TOOL.IServices.Services
             return lineCount;
         }
 
-        private void CountWords()
+        private long CountWords()
         {
             Console.WriteLine("Counting Words");
+            Console.WriteLine();
+            long wordCount = 0;
+            bool inWord = false;
+
+            using (StreamReader sr = new StreamReader(DIRECTORY))
+            {
+                int charCode;
+                while ((charCode = sr.Read()) != -1)
+                {
+                    char ch = (char)charCode;
+                    if (char.IsWhiteSpace(ch))
+                    {
+                        if (inWord)
+                        {
+                            wordCount++;
+                            inWord = false;
+                        }
+                    }
+                    else
+                    {
+                        inWord = true;
+                    }
+                }
+
+                if (inWord)
+                    wordCount++;
+            }
+            return wordCount;
         }
 
         private void CountChars()
