@@ -14,7 +14,6 @@ namespace WC_TOOL
             }
             
             ICCWC wc = new CCWC(input);
-            wc.ProcessFile();
         }
     }
 }

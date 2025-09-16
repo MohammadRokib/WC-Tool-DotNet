@@ -2,32 +2,38 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace WC_TOOL.IServices.Services
 {
     public class CCWC : ICCWC
     {
+        private string Flag = String.Empty;
+        private string Command = String.Empty;
+        private string FileName = String.Empty;
         private string DIRECTORY = String.Empty;
         private string FileContent = String.Empty;
-        private string Group = String.Empty;
-        private string Option = String.Empty;
-        private string FileName = String.Empty;
 
         public CCWC(string input)
         {
-            ParseInput(input);
-            GetPath();
+            ProcessFile(input);
         }
 
-        public void ProcessFile()
+        public void ProcessFile(string input)
         {
+            if (!ParseInput(input))
+                return;
+
+            if (!GetPath())
+                return;
+
             if (!LoadFile())
                 return;
 
             long result = 0;
 
-            switch (Option)
+            switch (Flag)
             {
                 case "-c":
                     result = CountBytes();
@@ -46,7 +52,8 @@ namespace WC_TOOL.IServices.Services
                     break;
             }
 
-            Console.WriteLine($"{result} {FileName}");
+            if (!String.IsNullOrEmpty(Flag))
+                Console.WriteLine($"{result} {FileName}");
         }
 
         public long CountBytes()
@@ -101,7 +108,6 @@ namespace WC_TOOL.IServices.Services
 
         public long CountChars()
         {
-            Console.WriteLine("Counting Lines");
             long charCount = 0;
 
             using (StreamReader sr = new StreamReader(DIRECTORY))
@@ -117,10 +123,10 @@ namespace WC_TOOL.IServices.Services
 
         private void DefaultCount()
         {
-            Console.WriteLine("No option selected");
+            Console.WriteLine($"{CountLines()} {CountWords()} {CountBytes()} {FileName}");
         }
 
-        private void GetPath()
+        private bool GetPath()
         {
             try
             {
@@ -130,7 +136,9 @@ namespace WC_TOOL.IServices.Services
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
+                return false;
             }
+            return true;
         }
 
         private bool LoadFile()
@@ -142,23 +150,31 @@ namespace WC_TOOL.IServices.Services
             }
 
             FileContent = File.ReadAllText(DIRECTORY);
-            Console.WriteLine("File Read Complete");
             return true;
         }
 
-        private void ParseInput(String input)
+        private bool ParseInput(String input)
         {
             String[] inputParts = input.Split(' ');
-            if (inputParts[0].Equals("ccwc", StringComparison.OrdinalIgnoreCase))
+            string pattern = @"^(?:cat\s+(?<file>\S+)\s*\|\s*)?ccwc(?:\s+(?<flag>-\w))?(?:\s+(?<file2>\S+))?$";
+
+            var match = Regex.Match(input.Trim(), pattern, RegexOptions.IgnoreCase);
+            if (match.Success)
             {
-                Group = inputParts[0];
-                Option = inputParts[1];
-                FileName = inputParts[2];
+                Flag = match.Groups["flag"].Value;
+                FileName = match.Groups["file2"].Value;
+                string pipeFile = match.Groups["file"].Value;
+
+                Command = input.StartsWith("cat", StringComparison.OrdinalIgnoreCase) ? "cat" : "ccwc";
+                FileName = !String.IsNullOrEmpty(pipeFile) ? pipeFile : FileName;
             }
             else
             {
                 Console.WriteLine("Invalid command format. Use: ccwc [option] [filename]");
+                return false;
             }
+
+            return true;
         }
     }
 }

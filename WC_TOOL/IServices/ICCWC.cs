@@ -8,7 +8,7 @@ namespace WC_TOOL.IServices
 {
     public interface ICCWC
     {
-        public void ProcessFile();
+        public void ProcessFile(string input);
         public long CountBytes();
         public long CountLines();
         public long CountWords();
