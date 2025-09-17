@@ -12,7 +12,6 @@ It allows you to count lines, words, characters, and bytes in a text file, suppo
 - [Features](#features)
 - [Installation](#installation)
 - [Usage](#usage)
-- [License](#license)
 
 ---
 
