@@ -130,8 +130,15 @@ namespace WC_TOOL.IServices.Services
         {
             try
             {
-                DIRECTORY = new DirectoryInfo(Directory.GetCurrentDirectory()).Parent.Parent.Parent.Parent.ToString();
-                DIRECTORY = Path.Combine(DIRECTORY, "WC_TOOL", FileName);
+                if (Path.IsPathRooted(FileName))
+                {
+                    DIRECTORY = FileName;
+                }
+                else
+                {
+                    DIRECTORY = new DirectoryInfo(Directory.GetCurrentDirectory()).Parent.Parent.Parent.Parent.ToString();
+                    DIRECTORY = Path.Combine(DIRECTORY, "WC_TOOL", FileName);
+                }
             }
             catch (Exception e)
             {
