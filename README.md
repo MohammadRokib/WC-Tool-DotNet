@@ -65,7 +65,8 @@ The following options can be used with this tool:
 - `-c` → Count the number of **bytes** in the file  
 - `-m` → Count the number of **characters** in the file  
 - `-l` → Count the number of **lines** in the file  
-- `-w` → Count the number of **words** in the file  
+- `-w` → Count the number of **words** in the file
+- **Default (no flags)** → Show **lines, words, and bytes**
 
 > **Note:**  
 > - If `<filepath>` is just a filename (e.g., `sample.txt`), the tool will look for the file in the `src` directory of the project.  
